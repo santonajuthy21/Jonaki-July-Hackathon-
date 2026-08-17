@@ -4,15 +4,18 @@ Verified working on day 1 against a harness app, so day 5 is a rebuild and not a
 discovery. Release builds are where R8 breaks plugin-heavy apps; finding that out
 on the last afternoon is how demos die.
 
-## Toolchain (one-time, already done on this machine)
+## Toolchain (one-time, done on this machine 2026-08-17)
 
-- Flutter 3.44.8 at `C:\src\flutter` (`git clone --depth 1 -b stable`)
-- Microsoft OpenJDK 21 at `C:\Program Files\Microsoft\jdk-21.0.11.10-hotspot`
+- Flutter 3.44.8 at `C:\src\flutter` (official Windows zip from the SDK archive,
+  extracted directly — not a git clone)
+- Microsoft OpenJDK 21 at `C:\Program Files\Microsoft\jdk-21.0.12.8-hotspot`
 - Android cmdline-tools in `%LOCALAPPDATA%\Android\sdk\cmdline-tools\latest`
-- `flutter config --jdk-dir=...` and `flutter doctor --android-licenses`
+- `flutter config --jdk-dir="C:\Program Files\Microsoft\jdk-21.0.12.8-hotspot"`
+  and `flutter doctor --android-licenses`
 
-Neither the JDK nor cmdline-tools were present before day 1. Verify this on any
-second machine before you rely on it.
+None of Flutter, the JDK, gh, keytool or the Android SDK were present before
+this setup. This was verified from a genuinely clean machine — don't assume
+it's done on a second one; re-run `flutter doctor -v` there first.
 
 ## Keystore
 
@@ -20,13 +23,13 @@ Gitignored, so it never reaches the public repo. Regenerate with:
 
 ```bash
 keytool -genkey -v -keystore android/app/upload-keystore.jks \
-  -keyalg RSA -keysize 2048 -validity 10000 -alias crisismesh \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias jonaki \
   -storepass <pw> -keypass <pw> \
-  -dname "CN=Crisis Mesh, OU=July Hackathon, O=Crisis Mesh, L=Dhaka, C=BD"
+  -dname "CN=Jonaki, OU=July Hackathon, O=Jonaki, L=Dhaka, C=BD"
 ```
 
 Then write `android/key.properties` with `storePassword`, `keyPassword`,
-`keyAlias=crisismesh`, `storeFile=upload-keystore.jks`.
+`keyAlias=jonaki`, `storeFile=upload-keystore.jks`.
 
 **Keep this keystore for the whole hackathon.** Rebuild with a different key and
 every judge who already installed has to uninstall first — Android refuses an
@@ -81,7 +84,7 @@ fallback link for an older device.
 apksigner verify --print-certs build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
 ```
 
-Must print `CN=Crisis Mesh`. If it prints `CN=Android Debug`, `key.properties` was
+Must print `CN=Jonaki`. If it prints `CN=Android Debug`, `key.properties` was
 not found and gradle silently fell back to the debug key.
 
 ## Distribute
