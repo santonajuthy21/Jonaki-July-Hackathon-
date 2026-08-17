@@ -12,3 +12,4 @@ android/app/upload-keystore.jks
 android/.kotlin/
 tools/.tile-key
 assets/tiles/*.mbtiles
+.flutter-plugins-dependencies
